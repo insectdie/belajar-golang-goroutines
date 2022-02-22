@@ -104,3 +104,28 @@ func TestSelectChannel(t *testing.T) {
 		}
 	}
 }
+
+func TestDefaultChannel(t *testing.T) {
+	channel1 := make(chan string)
+	channel2 := make(chan string)
+	defer close(channel1)
+	defer close(channel2)
+
+	go GiveMeRespond(channel1)
+	go GiveMeRespond(channel2)
+
+	counter := 0
+	for {
+		select {
+		case data := <-channel1:
+			fmt.Println("Data dari Channel 1", data)
+		case data := <-channel2:
+			fmt.Println("Data dari Channel 2", data)
+		default:
+			fmt.Println("menunggu data")
+		}
+		if counter == 2 {
+			break
+		}
+	}
+}
